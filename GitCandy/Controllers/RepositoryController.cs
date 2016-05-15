@@ -406,6 +406,18 @@ namespace GitCandy.Controllers
             }
         }
 
+        [ReadRepository]
+        public ActionResult Stats(string name, string path)
+        {
+            using (var git = new GitService(GitService.GetDirectoryInfo(name).FullName))
+            {
+                var model = git.GetStats(path);
+                if (model == null)
+                    throw new HttpException((int)HttpStatusCode.NotFound, string.Empty);
+                return View(model);
+            }
+        }
+
         [HttpPost]
         [ReadRepository(requireWrite: true)]
         public JsonResult Branches(string name, string path)

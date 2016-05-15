@@ -122,6 +122,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.99.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.99.0\lib\net45\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
@@ -185,6 +186,7 @@
     <None Include="packages.config" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Views\Repository\Stats.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -387,6 +389,7 @@
     <Compile Include="Models\RepositoryStatisticsModel.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\SshModel.cs" />
+    <Compile Include="Models\StatsModel.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Models\TagsModel.cs" />
     <Compile Include="Models\TeamListModel.cs" />

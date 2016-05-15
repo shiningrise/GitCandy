@@ -5,6 +5,8 @@ using GitCandy.Git.Cache;
 using GitCandy.Models;
 using LibGit2Sharp;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
@@ -739,7 +741,7 @@ namespace GitCandy.Git
             return retry > 0;
         }
 
-        private static DirectoryInfo GetDirectoryInfo(string project)
+        public static DirectoryInfo GetDirectoryInfo(string project)
         {
             return new DirectoryInfo(Path.Combine(UserConfiguration.Current.RepositoryPath, project));
         }
@@ -774,6 +776,60 @@ namespace GitCandy.Git
             }
         }
         #endregion
+
+        public StatsModel GetStats(string path)
+        {
+            string referenceName;
+            var commit = GetCommitByPath(ref path, out referenceName);
+            if (commit == null)
+                return null;
+
+            var ancestors = _repository.Commits
+                .QueryBy(new CommitFilter { Since = commit }).ToList();
+
+            var workingDay = ancestors.GroupBy(s => s.Author.Name)
+                .Select(s => new WorkingDayModel
+                {
+                    Name = s.Key,
+                    Count = s.Count(),
+                })
+                .ToArray();
+
+            var commitsCols = ancestors.Select(s => s.Author.Name).OrderBy(s => s).Distinct().ToArray();
+            var commitsRows = ancestors.GroupBy(s => s.Author.When.Date);
+
+            var dt = new DataTable();
+            dt.Columns.Add("日期");
+            foreach (var col in commitsCols)
+            {
+                dt.Columns.Add(col);
+            }
+            foreach (var row in commitsRows)
+            {
+                var rs = row
+                    .GroupBy(s => s.Author.Name)
+                    .Select(s => new { s.Key, Count = s.Count() })
+                    .ToArray();
+                var list = new List<string>();
+                list.Add(row.Key.ToShortDateString());
+                foreach (var col in commitsCols)
+                {
+                    var r = rs.FirstOrDefault(s => s.Key == col);
+                    if (r == null)
+                        list.Add("-");
+                    else
+                        list.Add(r.Count.ToString());
+                }
+                dt.Rows.Add(list.ToArray());
+            }
+
+            return new StatsModel
+            {
+                WorkingDay = workingDay,
+                CommitsTable = dt,
+            };
+        }
+
 
         #region IDisposable Members
         public void Dispose()

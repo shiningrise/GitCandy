@@ -1,0 +1,46 @@
+﻿@using System.Data
+@model GitCandy.Models.StatsModel
+
+@{
+    ViewBag.Title = "工作量统计";
+}
+
+<h2>工作量统计</h2>
+
+<h4>工作日统计</h4>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>用户</th>
+            <th>工作日</th>
+        </tr>
+        @foreach (var day in Model.WorkingDay)
+        {
+            <tr>
+                <td>@day.Name</td>
+                <td>@day.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>提交数统计</h4>
+<table class="table">
+    <tbody>
+        <tr>
+            @foreach (DataColumn col in Model.CommitsTable.Columns)
+            {
+                <th>@col.ColumnName</th>
+            }
+        </tr>
+        @foreach (DataRow row in Model.CommitsTable.Rows)
+        {
+            <tr>
+                @foreach (DataColumn col in Model.CommitsTable.Columns)
+                {
+                    <td>@row[col.ColumnName]</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

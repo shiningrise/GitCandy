@@ -46,6 +46,7 @@ else
                 {
                     <div class="pull-left">
                         <a href="@Url.Action("Compare", Html.OverRoute(new { path = "" }))" class="btn btn-default pull-left"><i class="glyphicon glyphicon-retweet"></i>@SR.Repository_Compare</a>
+                        <a href="@Url.Action("Stats", Html.OverRoute(new { path = "" }))" class="btn pull-left">统计</a>
                     </div>
                     <div class="pull-left keep-space">
                         @Html.ActionLink(SR.Shared_Detail, "Detail", Html.OverRoute(new { path = "" }), new { @class = "btn btn-default" })
